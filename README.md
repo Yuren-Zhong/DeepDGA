@@ -57,8 +57,3 @@ domain's from Ramdo.cpp
 7 - matsnu
 8 - ramdo
 ```
-About
--
-Author: Andrey Abakumov ( andrewaeva@ya.ru )
-
-License: GNU General Public License v2 (http://opensource.org/licenses/gpl-2.0.php)
