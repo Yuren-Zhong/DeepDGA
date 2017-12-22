@@ -16,7 +16,7 @@ word_dataframe = word_dataframe.applymap(lambda x: str(x).strip().lower())
 word_dataframe = word_dataframe.dropna()
 word_dataframe = word_dataframe.drop_duplicates()
 
-for i, v in dataframe_dict.iteritems():
+for i, v in dataframe_dict.items():
     if i == 'alexa':
         v = pd.read_csv('all_legit.txt', names=['uri'], header=None, encoding='utf-8')
         v['domain'] = v.applymap(lambda x: x.split('.')[0].strip().lower())
@@ -30,7 +30,7 @@ for i, v in dataframe_dict.iteritems():
         v['class'] = 'dga'
         dataframe_dict[i] = v
 
-print '# done parsing'
+print('# done parsing')
 
 all_domains = pd.concat([dataframe_dict['alexa'], dataframe_dict['conficker'], dataframe_dict['cryptolocker'],
                          dataframe_dict['zeus'], dataframe_dict['pushdo'], dataframe_dict['rovnix'],
@@ -78,7 +78,7 @@ all_domains['alexa_grams'] = alexa_counts * alexa_vc.transform(all_domains['doma
 all_domains['word_grams'] = dict_counts * dict_vc.transform(all_domains['domain']).T
 all_domains['diff'] = all_domains['alexa_grams'] - all_domains['word_grams']
 
-print 'Done data'
+print('Done data')
 
 
 # cond = all_domains['class'] != 'legit'
@@ -148,10 +148,10 @@ cm = confusion_matrix(y_test, y_pred, labels)
 
 def plot_cm(cm, labels):
     percent = (cm*100.0)/np.array(np.matrix(cm.sum(axis=1)).T)  # Derp, I'm sure there's a better way
-    print 'Confusion Matrix Stats'
+    print('Confusion Matrix Stats')
     for i, label_i in enumerate(labels):
         for j, label_j in enumerate(labels):
-            print "%s/%s: %.2f%% (%d/%d)" % (label_i, label_j, (percent[i][j]), cm[i][j], cm[i].sum())
+            print("%s/%s: %.2f%% (%d/%d)" % (label_i, label_j, (percent[i][j]), cm[i][j], cm[i].sum()))
     fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.grid(b=False)
