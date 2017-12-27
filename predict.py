@@ -14,7 +14,7 @@ maxlen = 100
 batch_size = 256
 epochs = 200
 
-weights_path = 'logs/weights.h5'
+weights_path = 'logs/basic_cnn_weights.h5'
 
 
 domains = json.load(open('domains.json'))
