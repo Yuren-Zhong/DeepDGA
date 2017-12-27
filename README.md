@@ -6,12 +6,12 @@ conda install keras tensorflow-gpu
 ```
 
 ## Usage
-###Training:
+### Training:
 ```
 python train.py
 ```
 One may modify the `train.py` to choose different models or modify the `models.py` to implement new models.
-###Predicting:
+### Predicting:
 1) modify the `domain.json`  to add the domains to be classified.
 2)
 ```
