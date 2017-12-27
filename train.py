@@ -1,62 +1,35 @@
-'''Trains a Bidirectional LSTM on the IMDB sentiment classification task.
-Output after 4 epochs on CPU: ~0.8146
-Time per epoch on CPU (Core i7): ~150s.
-'''
 
 import numpy as np
 
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Embedding, LSTM, Bidirectional
 from keras.layers import Activation, Conv1D, GlobalMaxPooling1D
+from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, LearningRateScheduler,TensorBoard
 
+from models import basic_cnn_model
 from data2json import load_data
 
 maxlen = 100
 batch_size = 256
 epochs = 200
 
-max_features = 5000
-embedding_dims = 50
-filters = 250
-kernel_size = 3
-hidden_dims = 250
+log_path = 'logs'
+name = 'basic_cnn'
 
+def build_callbacks(save_path, tflog_dir, batch_size):
+    checkpoint = ModelCheckpoint(filepath=save_path, monitor="val_acc", verbose=1, save_best_only=True, save_weights_only=True)
+    tf_log = TensorBoard(log_dir=tflog_dir, batch_size=batch_size)
+    callbacks = [checkpoint, tf_log]
+    return callbacks
 
 print('Loading data...')
 (x_train, y_train), (x_test, y_test) = load_data(200000, maxlen)
 print(len(x_train), 'train sequences')
 print(len(x_test), 'test sequences')
 
-y_train = np.array(y_train)
-y_test = np.array(y_test)
+model = basic_cnn_model()
 
-model = Sequential()
-
-# we start off with an efficient embedding layer which maps
-# our vocab indices into embedding_dims dimensions
-model.add(Embedding(max_features,
-                    embedding_dims,
-                    input_length=maxlen))
-model.add(Dropout(0.2))
-
-# we add a Convolution1D, which will learn filters
-# word group filters of size filter_length:
-model.add(Conv1D(filters,
-                 kernel_size,
-                 padding='valid',
-                 activation='relu',
-                 strides=1))
-# we use max pooling:
-model.add(GlobalMaxPooling1D())
-
-# We add a vanilla hidden layer:
-model.add(Dense(hidden_dims))
-model.add(Dropout(0.2))
-model.add(Activation('relu'))
-
-# We project onto a single unit output layer, and squash it with a sigmoid:
-model.add(Dense(1))
-model.add(Activation('sigmoid'))
+callbacks = build_callbacks(log_path+'/'+name+'_weights.h5', log_path+'/tf_log_'+name, batch_size)
 
 model.compile(loss='binary_crossentropy',
               optimizer='adam',
@@ -66,4 +39,5 @@ print('Train...')
 model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
-          validation_data=[x_test, y_test])
+          validation_data=[x_test, y_test],
+          callbacks=callbacks)
