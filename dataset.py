@@ -46,6 +46,8 @@ table = {
     '_': 38
 }
 
+suffixes = ['.com', '.net', '.biz', '.ru', '.org', '.co.uk', '.info', '.cc', '.ws', '.cn']
+
 pad_value = 40
 
 def text2seq(text):
@@ -62,8 +64,22 @@ def pad_seq(s, max_len):
         s.append(pad_value)
     return s
 
-def save_json_file(val_number, max_len):
-    # total sample number: pos and neg 80,0000 approximately
+def suffix_in(domain):
+    global suffixes
+    for s in suffixes:
+        if s in domain:
+            return s
+    return None
+
+def remove_suffix(domain):
+    ret = suffix_in(domain)
+    if ret is not None:
+        return domain.replace(ret, '')
+    return None
+
+def load_data(val_number, max_len, filter=True):
+    global suffixes
+
     with open('data/all_dga.txt', 'r') as fneg:
         neg_raw_data = fneg.readlines()
     with open('data/all_legit.txt', 'r') as fpos:
@@ -72,61 +88,29 @@ def save_json_file(val_number, max_len):
     x_data = []
     all_data = {}
 
-    for line in neg_raw_data:
-        x = line.split(' ')[0]
-        x_data.append(x)
-        all_data[x] = 1
-    for line in pos_raw_data:
-        x = line.split(' ')[0]
-        x_data.append(x)
-        all_data[x] = 0
+    if filter == True:
+        for line in neg_raw_data:
+            x = line.split(' ')[0]
+            r = remove_suffix(x)
+            if r is not None:
+                x_data.append(r)
+                all_data[r] = 1
+        for line in pos_raw_data:
+            x = line.split(' ')[0]
+            r = remove_suffix(x)
+            if r is not None:
+                x_data.append(r)
+                all_data[r] = 0
+    else:
+        for line in neg_raw_data:
+            x = line.split(' ')[0]
+            x_data.append(x)
+            all_data[x] = 1
+        for line in pos_raw_data:
+            x = line.split(' ')[0]
+            x_data.append(x)
+            all_data[x] = 0
 
-    shuffle(x_data)
-
-    x_train = []
-    x_test = []
-    y_train = []
-    y_test = []
-
-    n = 0
-    for x in x_data:
-        m = pad_seq(text2seq(x), max_len)
-        if n < val_number:
-            x_test.append(m)
-            y_test.append(all_data[x])
-        else:
-            x_train.append(m)
-            y_train.append(all_data[x])
-        n += 1
-        if n % 50000 == 0:
-            print('n: {}'.format(n))
-
-    with open("x_train.json", 'w') as f:
-        f.write(json.dumps(x_train))
-    with open("x_test.json", 'w') as f:
-        f.write(json.dumps(x_test))
-    with open("y_train.json", 'w') as f:
-        f.write(json.dumps(y_train))
-    with open("y_test.json", 'w') as f:
-        f.write(json.dumps(y_test))
-
-def load_data(val_number, max_len):
-    with open('data/all_dga.txt', 'r') as fneg:
-        neg_raw_data = fneg.readlines()
-    with open('data/all_legit.txt', 'r') as fpos:
-        pos_raw_data = fpos.readlines()
-
-    x_data = []
-    all_data = {}
-
-    for line in neg_raw_data:
-        x = line.split(' ')[0]
-        x_data.append(x)
-        all_data[x] = 1
-    for line in pos_raw_data:
-        x = line.split(' ')[0]
-        x_data.append(x)
-        all_data[x] = 0
 
     shuffle(x_data)
 

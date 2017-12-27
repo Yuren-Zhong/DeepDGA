@@ -7,7 +7,7 @@ from keras.layers import Activation, Conv1D, GlobalMaxPooling1D
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, LearningRateScheduler,TensorBoard
 
 from models import basic_cnn_model
-from data2json import load_data
+from dataset import load_data
 
 maxlen = 100
 batch_size = 256

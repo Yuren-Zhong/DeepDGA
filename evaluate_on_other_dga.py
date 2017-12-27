@@ -11,15 +11,16 @@ epochs = 200
 
 weights_path = 'logs/basic_cnn_weights.h5'
 
-domains = json.load(open('domains.json'))
+def process_line(line):
+    return line.split('.')[0].replace(' ', '').replace('\n', '')
+
+with open('data/other_dga.txt', 'r') as f:
+  domains = f.readlines()
+
 x = []
 for d in domains:
-    r = remove_suffix(d)
-    if r is not None:
-        x.append(pad_seq(text2seq(r), maxlen))
-    else:
-        # can't guarantee accuracy
-        x.append(pad_seq(text2seq(d.split('.')[0]), maxlen))
+    r = process_line(d)
+    x.append(pad_seq(text2seq(r), maxlen))
 
 x = np.array(x)
 
@@ -34,11 +35,11 @@ result = model.predict(x,
                    verbose=0) 
 
 print("*"*40)
-i = 0
-for d in domains:
-    if result[i][0] < 0.5:
-        r = 'legit'
-    else:
-        r = 'dga'
-    print(d + ' : ' + r)
+n = 0
+for i in range(len(x)):
+    if result[i][0] > 0.5:
+        n += 1
     i += 1
+
+print(n, len(x))
+print(n/len(x))
