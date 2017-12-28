@@ -11,19 +11,29 @@ maxlen = 100
 batch_size = 256
 epochs = 200
 
-weights_path = 'logs/basic_cnn_weights.h5'
+def process_data(domains, filter=True):
+    x = []
+    if filter == False:
+        for d in domains:
+            x.append(pad_seq(text2seq(d), maxlen))
+        return np.array(x)
+
+    for d in domains:
+        r = remove_suffix(d)
+        if r is not None:
+            x.append(pad_seq(text2seq(d), maxlen))
+        else:
+            # can't guarantee accuracy
+            x.append(pad_seq(text2seq(d.split('.')[0]), maxlen))
+
+    return np.array(x)
+
+weights_path = 'logs/basic_cnn_fulldomain_weights.h5'
+print("weights path : " + weights_path)
 
 domains = json.load(open('domains.json'))
-x = []
-for d in domains:
-    r = remove_suffix(d)
-    if r is not None:
-        x.append(pad_seq(text2seq(r), maxlen))
-    else:
-        # can't guarantee accuracy
-        x.append(pad_seq(text2seq(d.split('.')[0]), maxlen))
 
-x = np.array(x)
+x = process_data(domains, filter=False)
 
 model = basic_cnn_model()
 model.compile(loss='binary_crossentropy',

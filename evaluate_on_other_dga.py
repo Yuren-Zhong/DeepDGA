@@ -11,17 +11,20 @@ maxlen = 100
 batch_size = 256
 epochs = 200
 
-weights_path = 'logs/basic_cnn_weights.h5'
+weights_path = 'logs/basic_cnn_fulldomain_weights.h5'
+print("weights path : " + weights_path)
 
-def process_line(line):
-    return line.split('.')[0].replace(' ', '').replace('\n', '')
+def process_line(line, filter=True):
+    if filter:
+        return line.split('.')[0].replace(' ', '').replace('\n', '')
+    return line.replace(' ', '').replace('\n', '')
 
 with open('data/other_dga.txt', 'r') as f:
   domains = f.readlines()
 
 x = []
 for d in domains:
-    r = process_line(d)
+    r = process_line(d, filter=False)
     x.append(pad_seq(text2seq(r), maxlen))
 
 x = np.array(x)

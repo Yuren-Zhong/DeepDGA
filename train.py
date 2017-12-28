@@ -15,7 +15,7 @@ batch_size = 256
 epochs = 200
 
 log_path = 'logs'
-name = 'basic_cnn'
+name = 'basic_cnn_fulldomain'
 
 def lr_schedule(epoch):
     """Learning Rate Schedule
@@ -50,7 +50,7 @@ def build_callbacks(save_path, tflog_dir, batch_size):
     return callbacks
 
 print('Loading data...')
-(x_train, y_train), (x_test, y_test) = load_data(200000, maxlen)
+(x_train, y_train), (x_test, y_test) = load_data(200000, maxlen, filter=False)
 print(len(x_train), 'train sequences')
 print(len(x_test), 'test sequences')
 
@@ -59,7 +59,7 @@ model = basic_cnn_model()
 callbacks = build_callbacks(log_path+'/'+name+'_weights.h5', log_path+'/tf_log_'+name, batch_size)
 
 model.compile(loss='binary_crossentropy',
-              optimizer=Adam(lr=0.01),
+              optimizer=Adam(lr=0.001),
               metrics=['accuracy'])
 
 print('Train...')
