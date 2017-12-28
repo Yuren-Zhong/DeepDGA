@@ -2,6 +2,8 @@
 import numpy as np
 import json
 
+from keras.optimizers import Adam
+
 from models import basic_cnn_model
 from dataset import remove_suffix, text2seq, pad_seq
 
@@ -26,7 +28,7 @@ x = np.array(x)
 
 model = basic_cnn_model()
 model.compile(loss='binary_crossentropy',
-              optimizer='adam',
+              optimizer=Adam(lr=0.01),
               metrics=['accuracy'])
 model.load_weights(weights_path, by_name=True)
 
