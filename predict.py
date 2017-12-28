@@ -29,7 +29,6 @@ def process_data(domains, filter=True):
     return np.array(x)
 
 weights_path = 'logs/basic_cnn_fulldomain_weights.h5'
-print("weights path : " + weights_path)
 
 domains = json.load(open('domains.json'))
 
@@ -45,6 +44,8 @@ result = model.predict(x,
                    batch_size=batch_size,
                    verbose=0) 
 
+print("*"*40)
+print("weights path : " + weights_path)
 print("*"*40)
 i = 0
 for d in domains:

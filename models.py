@@ -41,3 +41,18 @@ def basic_cnn_model():
     model.add(Activation('sigmoid'))
 
     return model
+
+def lstm_model():
+    max_features = 5000
+    maxlen = 100
+
+    model = Sequential()
+    model.add(Embedding(max_features, 128, input_length=maxlen))
+    model.add(LSTM(128))
+    model.add(Dropout(0.5))
+    model.add(Dense(1))
+    model.add(Activation('sigmoid'))
+
+    return model
+
+
