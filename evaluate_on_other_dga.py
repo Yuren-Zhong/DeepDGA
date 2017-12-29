@@ -4,15 +4,15 @@ import json
 
 from keras.optimizers import Adam
 
-from models import basic_cnn_model
+from models import basic_cnn_model, lstm_model
 from dataset import remove_suffix, text2seq, pad_seq
 
 maxlen = 100
 batch_size = 256
 epochs = 200
 
-weights_path = 'logs/basic_cnn_fulldomain_weights.h5'
-dga_file = 'data/360netlab_dga.txt'
+weights_path = 'logs/basic_lstm_weights.h5'
+dga_file = 'data/other_dga.txt'
 
 def process_line(line, filter=True):
     if filter:
@@ -29,7 +29,7 @@ for d in domains:
 
 x = np.array(x)
 
-model = basic_cnn_model()
+model = lstm_model()
 model.compile(loss='binary_crossentropy',
               optimizer=Adam(lr=0.01),
               metrics=['accuracy'])

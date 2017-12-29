@@ -4,7 +4,7 @@ import json
 
 from keras.optimizers import Adam
 
-from models import basic_cnn_model
+from models import basic_cnn_model, lstm_model
 from dataset import remove_suffix, text2seq, pad_seq
 
 maxlen = 100
@@ -28,13 +28,13 @@ def process_data(domains, filter=True):
 
     return np.array(x)
 
-weights_path = 'logs/basic_cnn_fulldomain_weights.h5'
+weights_path = 'logs/basic_lstm_weights.h5'
 
 domains = json.load(open('domains.json'))
 
 x = process_data(domains, filter=False)
 
-model = basic_cnn_model()
+model = lstm_model()
 model.compile(loss='binary_crossentropy',
               optimizer=Adam(lr=0.01),
               metrics=['accuracy'])

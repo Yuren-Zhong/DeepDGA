@@ -7,7 +7,7 @@ from keras.layers import Dense, Dropout, Embedding, LSTM, Bidirectional
 from keras.layers import Activation, Conv1D, GlobalMaxPooling1D
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, LearningRateScheduler,TensorBoard
 
-from models import basic_cnn_model, lstm_model
+from models import basic_cnn_model, lstm_model, cnn_lstm_model, bidirectional_lstm_model
 from dataset import load_data
 
 maxlen = 100
@@ -15,7 +15,7 @@ batch_size = 256
 epochs = 200
 
 log_path = 'logs'
-name = 'basic_lstm'
+name = 'basic_bidirectional_lstm'
 
 def lr_schedule(epoch):
     """Learning Rate Schedule
@@ -45,8 +45,8 @@ def build_callbacks(save_path, tflog_dir, batch_size):
                                 patience=5,
                                 min_lr=0.5e-6)
     lr_scheduler = LearningRateScheduler(lr_schedule)
-    tf_log = TensorBoard(log_dir=tflog_dir, batch_size=batch_size)
-    callbacks = [checkpoint, tf_log, lr_scheduler]
+    # tf_log = TensorBoard(log_dir=tflog_dir, batch_size=batch_size)
+    callbacks = [checkpoint, lr_scheduler]
     return callbacks
 
 print('Loading data...')
@@ -54,7 +54,7 @@ print('Loading data...')
 print(len(x_train), 'train sequences')
 print(len(x_test), 'test sequences')
 
-model = lstm_model()
+model = bidirectional_lstm_model()
 model.summary()
 
 callbacks = build_callbacks(log_path+'/'+name+'_weights.h5', log_path+'/tf_log_'+name, batch_size)
