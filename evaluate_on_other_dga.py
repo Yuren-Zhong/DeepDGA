@@ -4,19 +4,19 @@ import json
 
 from keras.optimizers import Adam
 
-from models import basic_cnn_model, lstm_model
+from models import basic_cnn_model, lstm_model, cnn_lstm_model, bidirectional_lstm_model
 from dataset import remove_suffix, text2seq, pad_seq
 
 maxlen = 100
 batch_size = 256
 epochs = 200
 
-weights_path = 'logs/basic_lstm_weights.h5'
-dga_file = 'data/other_dga.txt'
+weights_path = 'logs/basic_cnn_lstm_weights.h5'
+dga_file = 'data/philarkwright_dga.txt'
 
 def process_line(line, filter=True):
     if filter:
-        return line.split('.')[0].replace(' ', '').replace('\n', '')
+        return line.split('.')[0].replace(' ', '').replace('\n', '').replace('\t', '')
     return line.replace(' ', '').replace('\n', '')
 
 with open(dga_file, 'r') as f:
@@ -29,7 +29,7 @@ for d in domains:
 
 x = np.array(x)
 
-model = lstm_model()
+model = cnn_lstm_model()
 model.compile(loss='binary_crossentropy',
               optimizer=Adam(lr=0.01),
               metrics=['accuracy'])

@@ -4,7 +4,7 @@ import json
 
 from keras.optimizers import Adam
 
-from models import basic_cnn_model, lstm_model
+from models import basic_cnn_model, lstm_model, cnn_lstm_model, bidirectional_lstm_model
 from dataset import remove_suffix, text2seq, pad_seq
 
 maxlen = 100

@@ -15,7 +15,7 @@ batch_size = 256
 epochs = 200
 
 log_path = 'logs'
-name = 'basic_bidirectional_lstm'
+name = 'basic_cnn_lstm'
 
 def lr_schedule(epoch):
     """Learning Rate Schedule
@@ -54,7 +54,7 @@ print('Loading data...')
 print(len(x_train), 'train sequences')
 print(len(x_test), 'test sequences')
 
-model = bidirectional_lstm_model()
+model = basic_cnn_model()
 model.summary()
 
 callbacks = build_callbacks(log_path+'/'+name+'_weights.h5', log_path+'/tf_log_'+name, batch_size)

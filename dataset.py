@@ -162,5 +162,4 @@ def test():
     print(l1, l2)
 
 if __name__ == '__main__':
-    # save_json_file(100000)
-    print("data2json main")
+    print("dataset main")
