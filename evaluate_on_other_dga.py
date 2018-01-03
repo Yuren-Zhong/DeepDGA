@@ -12,7 +12,7 @@ batch_size = 256
 epochs = 200
 
 weights_path = 'logs/basic_cnn_lstm_weights.h5'
-dga_file = 'data/philarkwright_dga.txt'
+dga_file = 'data/clicksecurity_dga.txt'
 
 def process_line(line, filter=True):
     if filter:
